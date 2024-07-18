@@ -98,8 +98,7 @@ function formatDuration(seconds) {
 
   // Pad the minutes and seconds with leading zeros, if required
   const minutesDisplay = minutes < 10 ? `0${minutes}` : minutes;
-  const secondsDisplay =
-    remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+  const secondsDisplay = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
 
   // Include hours in the output only if it's greater than 0
   if (hours > 0) {
@@ -219,10 +218,7 @@ function submitAssessment(event) {
   const formData = new FormData(form);
   const userAnswers = Array.from(formData.values());
   const userScores = currentTimestamp.questions.map((question, index) => {
-    return question.correct_answer.toLowerCase() ===
-      userAnswers[index].toLowerCase()
-      ? question.question_score
-      : 0;
+    return question.correct_answer.toLowerCase() === userAnswers[index].toLowerCase() ? question.question_score : 0;
   });
 
   const userAnswersData = currentTimestamp.questions.map((question, index) => {
@@ -233,10 +229,7 @@ function submitAssessment(event) {
     };
   });
 
-  const totalPoints = currentTimestamp.questions.reduce(
-    (acc, question) => acc + question.question_score,
-    0
-  );
+  const totalPoints = currentTimestamp.questions.reduce((acc, question) => acc + question.question_score, 0);
   const score = userScores.reduce((acc, score) => acc + score, 0);
   const grade = ((score / totalPoints) * 100).toFixed(2);
 
@@ -314,21 +307,12 @@ function updateVideo(timestamps) {
 
 function customSummaryClickListener(timestamps) {
   const calculateQuestionsTotal = (questions) => {
-    return questions.reduce(
-      (acc, question) => acc + question.question_score,
-      0
-    );
+    return questions.reduce((acc, question) => acc + question.question_score, 0);
   };
 
   const wrappedFn = () => {
-    const totalUserScore = timestamps.reduce(
-      (acc, timestamp) => acc + timestamp.score,
-      0
-    );
-    const totalScore = timestamps.reduce(
-      (acc, timestamp) => acc + calculateQuestionsTotal(timestamp.questions),
-      0
-    );
+    const totalUserScore = timestamps.reduce((acc, timestamp) => acc + timestamp.score, 0);
+    const totalScore = timestamps.reduce((acc, timestamp) => acc + calculateQuestionsTotal(timestamp.questions), 0);
     const totalGrade = ((totalUserScore / totalScore) * 100).toFixed(2);
 
     // prettier-ignore

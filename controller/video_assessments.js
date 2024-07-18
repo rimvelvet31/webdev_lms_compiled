@@ -1,26 +1,22 @@
-document
-  .getElementById("videoPlayer")
-  .addEventListener("timeupdate", function (event) {
-    updateTimestampButton(event.target.currentTime);
-  });
+document.getElementById("videoPlayer").addEventListener("timeupdate", function (event) {
+  updateTimestampButton(event.target.currentTime);
+});
 
-document
-  .getElementById("videoPlayer")
-  .addEventListener("click", function (event) {
-    const video = event.target;
-    const duration = video.duration;
-    const progressBar = event.target;
+document.getElementById("videoPlayer").addEventListener("click", function (event) {
+  const video = event.target;
+  const duration = video.duration;
+  const progressBar = event.target;
 
-    const rect = progressBar.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
+  const rect = progressBar.getBoundingClientRect();
+  const clickX = event.clientX - rect.left;
 
-    const clickPositionPercentage = clickX / rect.width;
-    const clickTime = duration * clickPositionPercentage;
+  const clickPositionPercentage = clickX / rect.width;
+  const clickTime = duration * clickPositionPercentage;
 
-    video.currentTime = clickTime;
+  video.currentTime = clickTime;
 
-    updateTimestampButton(clickTime);
-  });
+  updateTimestampButton(clickTime);
+});
 
 function updateTimestampButton(currentTime) {
   currentTime = Math.floor(currentTime);
@@ -31,16 +27,12 @@ function updateTimestampButton(currentTime) {
 
   let timestamp;
   if (hours > 0) {
-    timestamp = `${hours}:${minutes < 10 ? "0" : ""}${minutes}:${
-      seconds < 10 ? "0" : ""
-    }${seconds}`;
+    timestamp = `${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   } else {
     timestamp = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   }
 
-  document.getElementById(
-    "assessmentButton"
-  ).textContent = `Create Assessment at ${timestamp}`;
+  document.getElementById("assessmentButton").textContent = `Create Assessment at ${timestamp}`;
 
   const assessmentButton = document.getElementById("assessmentButton");
   assessmentButton.textContent = `Create Assessment at ${timestamp}`;

@@ -40,7 +40,8 @@ $stmt->close();
   <title>Video Lectures</title>
 
   <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 <body>
@@ -51,12 +52,12 @@ $stmt->close();
   <main class="container">
     <div class="d-flex justify-content-between my-3">
       <h2>Video Lectures</h2>
-      <?php if ($_SESSION["isAdmin"]) : ?>
+      <?php if ($_SESSION["isAdmin"]): ?>
         <a href="upload_video.php" class="btn btn-primary">Upload Video</a>
       <?php endif; ?>
     </div>
 
-    <?php if (isset($_SESSION['upload_success'])) : ?>
+    <?php if (isset($_SESSION['upload_success'])): ?>
       <div class="alert alert-success fade-out">File successfully uploaded.</div>
       <?php unset($_SESSION['upload_success']); ?> <!-- Unset session after displaying -->
     <?php endif; ?>
@@ -64,7 +65,7 @@ $stmt->close();
     <!-- <div class="alert alert-danger fade-out">An error occurred.</div> -->
 
     <div class="card-container">
-      <?php foreach ($videos as $video) : ?>
+      <?php foreach ($videos as $video): ?>
         <div class="card mb-3" style="width: 100%;">
           <!-- Insert thumbnail here -->
 
@@ -82,15 +83,16 @@ $stmt->close();
               ?>
             </p>
 
-            <?php if (!$_SESSION["isAdmin"]) : ?>
+            <?php if (!$_SESSION["isAdmin"]): ?>
               <a href="lecture.php?video=<?php echo $video['id']; ?>" class="btn btn-primary">Watch Lecture</a>
             <?php endif; ?>
 
 
-            <?php if ($_SESSION["isAdmin"]) : ?>
+            <?php if ($_SESSION["isAdmin"]): ?>
               <a href="video_assessments.php?video=<?php echo $video['id']; ?>" class="btn btn-primary">Add Assessment</a>
               <a href="edit_video.php?video=<?php echo $video['id']; ?>" class="btn btn-primary">Edit Details</a>
-              <a href="./includes/delete_video.php?video=<?php echo $video['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this video?');">Delete</a>
+              <a href="./includes/delete_video.php?video=<?php echo $video['id']; ?>" class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to delete this video?');">Delete</a>
             <?php endif; ?>
           </div>
         </div>

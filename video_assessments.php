@@ -45,7 +45,8 @@ $stmt->close();
   <title><?php echo $video_title ?></title>
 
   <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 <body class="container">
@@ -58,18 +59,20 @@ $stmt->close();
   <a href="create_assessment.html" id="assessmentButton" class="btn btn-primary">Create Assessment at...</a>
 
   <div class="my-3">
-    <?php if (!empty($assessments)) : ?>
+    <?php if (!empty($assessments)): ?>
       <h2>Assessments</h2>
     <?php endif; ?>
 
-    <?php foreach ($assessments as $assessment) : ?>
+    <?php foreach ($assessments as $assessment): ?>
       <div class="card" style="width: 800">
         <div class="card-body">
           <h5 class="card-title">
             Assessment at <?php echo $assessment['timestamp'] ?>
           </h5>
-          <a href="edit_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>" class="btn btn-primary">Edit</a>
-          <a href="./includes/delete_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>" class=" btn btn-danger" onclick="return confirm('Are you sure you want to delete this assessment?');">
+          <a href="edit_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>"
+            class="btn btn-primary">Edit</a>
+          <a href="./includes/delete_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>"
+            class=" btn btn-danger" onclick="return confirm('Are you sure you want to delete this assessment?');">
             Delete
           </a>
         </div>
@@ -82,7 +85,9 @@ $stmt->close();
   <script src="controller/video_assessments.js"></script>
 
   <!-- Bootstrap -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>

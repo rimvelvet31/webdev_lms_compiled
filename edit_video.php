@@ -49,7 +49,8 @@ if (isset($_GET['video'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Video</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 <body>
@@ -58,11 +59,13 @@ if (isset($_GET['video'])) {
     <form method="POST" class="mb-3">
       <div class="mb-3">
         <label for="video_title" class="form-label">Video Title</label>
-        <input type="text" class="form-control" id="video_title" name="video_title" value="<?php echo htmlspecialchars($video_title); ?>" required>
+        <input type="text" class="form-control" id="video_title" name="video_title"
+          value="<?php echo htmlspecialchars($video_title); ?>" required>
       </div>
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
-        <textarea class="form-control" id="description" name="description" rows="3" required><?php echo htmlspecialchars($description); ?></textarea>
+        <textarea class="form-control" id="description" name="description" rows="3"
+          required><?php echo htmlspecialchars($description); ?></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Save Changes</button>
       <a href="index.php" class="btn btn-secondary">Cancel</a>

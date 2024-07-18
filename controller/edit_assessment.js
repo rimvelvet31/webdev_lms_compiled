@@ -8,30 +8,29 @@ function createQuestionDiv() {
   const questionIndex = document.querySelectorAll(".question_div").length;
 
   questionDiv.innerHTML = `
-            <div class="remove_question_div">X</div>
-            <div class="question_title">
-                <label for="question_${questionIndex}">Question:</label>
-                <textarea name="question_${questionIndex}_title" id="question_${questionIndex}" class="question_textarea" required></textarea>
-            </div>
-            <div class="question_points">
-                <input type="number" name="question_${questionIndex}_points" class="question_points_input" placeholder="Pts." required>
-            </div>
-            <div class="question_type">
-                <select name="question_${questionIndex}_type" class="question_type_select" required>
-                    <option value="1">Multiple Choice</option>
-                    <option value="2">Identification</option>
-                </select>
-            </div>
-            <div class="answer_field"></div>
-            <div class="add_option_div">
-                <p>Add Another Option +</p>
-            </div>
-        `;
+      <div class="remove_question_div">X</div>
+      <div class="question_title">
+          <label for="question_${questionIndex}">Question:</label>
+          <textarea name="question_${questionIndex}_title" id="question_${questionIndex}" class="question_textarea" required></textarea>
+      </div>
+      <div class="question_points">
+          <input type="number" name="question_${questionIndex}_points" class="question_points_input" placeholder="Pts." required>
+      </div>
+      <div class="question_type">
+          <select name="question_${questionIndex}_type" class="question_type_select" required>
+              <option value="1">Multiple Choice</option>
+              <option value="2">Identification</option>
+          </select>
+      </div>
+      <div class="answer_field"></div>
+      <div class="add_option_div">
+          <p>Add Another Option +</p>
+      </div>
+    `;
 
-  const removeQuestionButton = questionDiv.querySelector(
-    ".remove_question_div"
-  );
+  const removeQuestionButton = questionDiv.querySelector(".remove_question_div");
   removeQuestionButton.addEventListener("click", removeQuestion);
+
   const addOptionButton = questionDiv.querySelector(".add_option_div");
   addOptionButton.addEventListener("click", addOption);
 
@@ -41,6 +40,7 @@ function createQuestionDiv() {
 function updateMultipleQuestions(questionDiv) {
   const questionDivName = questionDiv.querySelector(".question_textarea").id;
   const option_divs = questionDiv.querySelectorAll(".multiple-choice-option");
+
   option_divs.forEach((optionDiv, index) => {
     optionDiv.querySelectorAll("input").forEach((input, i) => {
       if (input.type === "radio") {
@@ -62,9 +62,7 @@ function addOption() {
 
   const radioInput = document.createElement("input");
   radioInput.type = "radio";
-  radioInput.name = `${
-    questionDiv.querySelector(".question_textarea").id
-  }_answer`;
+  radioInput.name = `${questionDiv.querySelector(".question_textarea").id}_answer`;
   radioInput.required = true;
 
   const inputLabel = document.createElement("input");
@@ -123,6 +121,7 @@ function updateAnswerField(questionDiv) {
       if (multQExists.length === 0) {
         addOption.call(addOptionButton);
       }
+
       if (textQExists) {
         textQExists.style.display = "none";
         textQExists.querySelector("textarea").required = false;
@@ -147,6 +146,7 @@ function updateAnswerField(questionDiv) {
         textAreaDiv.appendChild(textarea);
         answerField.appendChild(textAreaDiv);
       }
+
       multQExists.forEach((option) => {
         option.style.display = "none";
         option.querySelectorAll("input").forEach((input) => {
@@ -154,7 +154,9 @@ function updateAnswerField(questionDiv) {
           input.disabled = true;
         });
       });
+
       addOptionButton.style.display = "none";
+
       if (textQExists) {
         textQExists.style.display = "flex";
         textQExists.querySelector("textarea").required = true;
@@ -177,12 +179,8 @@ function updateQuestionDivNames() {
   const questionDivs = document.querySelectorAll(".question_div");
   questionDivs.forEach((questionDiv, index) => {
     const questionTextarea = questionDiv.querySelector(".question_textarea");
-    const questionPointsInput = questionDiv.querySelector(
-      ".question_points_input"
-    );
-    const questionTypeSelect = questionDiv.querySelector(
-      ".question_type_select"
-    );
+    const questionPointsInput = questionDiv.querySelector(".question_points_input");
+    const questionTypeSelect = questionDiv.querySelector(".question_type_select");
 
     questionTextarea.name = `question_${index}_title`;
     questionTextarea.id = `question_${index}`;
@@ -200,9 +198,7 @@ document.querySelectorAll(".question_div").forEach((questionDiv) => {
   const addOptionButton = questionDiv.querySelector(".add_option_div");
   addOptionButton.addEventListener("click", addOption);
 
-  const removeQuestionButton = questionDiv.querySelector(
-    ".remove_question_div"
-  );
+  const removeQuestionButton = questionDiv.querySelector(".remove_question_div");
   removeQuestionButton.addEventListener("click", removeQuestion);
 
   const exitButtons = questionDiv.querySelectorAll(".exit_button");
@@ -210,9 +206,7 @@ document.querySelectorAll(".question_div").forEach((questionDiv) => {
     button.addEventListener("click", function () {
       const optionDiv = this.closest(".multiple-choice-option");
       const answerField = optionDiv.closest(".answer_field");
-      if (
-        answerField.querySelectorAll(".multiple-choice-option").length === 1
-      ) {
+      if (answerField.querySelectorAll(".multiple-choice-option").length === 1) {
         alert("You must have at least one option");
         return;
       }
@@ -226,42 +220,40 @@ document.querySelectorAll(".question_div").forEach((questionDiv) => {
 
 updateQuestionDivNames();
 
-document
-  .getElementById("assessment_form")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
+document.getElementById("assessment_form").addEventListener("submit", function (event) {
+  event.preventDefault();
 
-    // Disable inputs for hidden multiple-choice options
-    document.querySelectorAll(".multiple-choice-option").forEach((option) => {
-      if (option.style.display === "none") {
-        option.querySelectorAll("input").forEach((input) => {
-          input.disabled = true;
-        });
-      }
-    });
-
-    // Submit the form
-    fetch("./includes/update_assessment.php", {
-      method: "POST",
-      body: new FormData(this),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-          alert("Assessment updated successfully!");
-
-          const currentUrl = window.location.href;
-          const url = new URL(currentUrl);
-          const searchParams = new URLSearchParams(url.search);
-          const video = searchParams.get("video");
-
-          window.location.href = `video_assessments.php?video=${video}`;
-        } else {
-          alert("Error updating assessment: " + data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("An error occurred while updating the assessment.");
+  // Disable inputs for hidden multiple-choice options
+  document.querySelectorAll(".multiple-choice-option").forEach((option) => {
+    if (option.style.display === "none") {
+      option.querySelectorAll("input").forEach((input) => {
+        input.disabled = true;
       });
+    }
   });
+
+  // Submit the form
+  fetch("./includes/update_assessment.php", {
+    method: "POST",
+    body: new FormData(this),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        alert("Assessment updated successfully!");
+
+        const currentUrl = window.location.href;
+        const url = new URL(currentUrl);
+        const searchParams = new URLSearchParams(url.search);
+        const video = searchParams.get("video");
+
+        window.location.href = `video_assessments.php?video=${video}`;
+      } else {
+        alert("Error updating assessment: " + data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while updating the assessment.");
+    });
+});

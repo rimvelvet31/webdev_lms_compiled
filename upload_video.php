@@ -75,14 +75,15 @@ $mysqli->close();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload Video</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 <body>
   <main class="container">
     <h2 class="my-3">Upload Video Lecture</h2>
 
-    <?php if (isset($message)) : ?>
+    <?php if (isset($message)): ?>
       <div class="alert alert-danger"><?= htmlspecialchars($message) ?></div>
     <?php endif; ?>
 
@@ -99,7 +100,8 @@ $mysqli->close();
 
       <div class="mb-3">
         <label for="videoFile" class="form-label">Upload Video Lecture</label>
-        <input type="file" class="form-control" id="videoFile" name="videoFile" accept="video/mp4, video/avi, video/mov, video/wmv" required>
+        <input type="file" class="form-control" id="videoFile" name="videoFile"
+          accept="video/mp4, video/avi, video/mov, video/wmv" required>
       </div>
 
       <!-- Video Preview -->
@@ -114,7 +116,7 @@ $mysqli->close();
   </main>
 
   <script>
-    document.getElementById('videoFile').addEventListener('change', function(event) {
+    document.getElementById('videoFile').addEventListener('change', function (event) {
       const file = event.target.files[0];
       if (file) {
         const videoPreview = document.getElementById('videoPreview');
