@@ -57,8 +57,7 @@ $stmt->close();
 
   <a href="create_assessment.html" id="assessmentButton" class="btn btn-primary">Create Assessment at...</a>
 
-  <div class="mt-3">
-
+  <div class="my-3">
     <?php if (!empty($assessments)) : ?>
       <h2>Assessments</h2>
     <?php endif; ?>
@@ -70,17 +69,20 @@ $stmt->close();
             Assessment at <?php echo $assessment['timestamp'] ?>
           </h5>
           <a href="edit_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>" class="btn btn-primary">Edit</a>
-          <a href="delete_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>" class=" btn btn-danger" onclick="return confirm('Are you sure you want to delete this assessment?');">
+          <a href="./includes/delete_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>" class=" btn btn-danger" onclick="return confirm('Are you sure you want to delete this assessment?');">
             Delete
           </a>
         </div>
       </div>
     <?php endforeach; ?>
+  </div>
 
-    <script src="controller/video_assessments.js"></script>
+  <a class="btn btn-primary" href="index.php">Go Back Home</a>
 
-    <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="controller/video_assessments.js"></script>
+
+  <!-- Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>

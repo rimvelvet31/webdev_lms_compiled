@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'includes/dbh_inc.php';
+include 'dbh_inc.php';
 
 // Check if user is an admin
 if (!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] !== true) {
@@ -29,7 +29,7 @@ if (isset($_GET['video'])) {
       unlink($videoPath);
     }
     echo "<div class='alert alert-success'>Video deleted successfully.</div>";
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit();
   } else {
     echo "<div class='alert alert-danger'>Error deleting video: " . $stmt->error . "</div>";

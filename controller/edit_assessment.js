@@ -1,31 +1,32 @@
 const questionList = document.querySelector(".question_list");
 const addQuestionButton = document.getElementById("add_question");
-let doAlert = true;
 
 function createQuestionDiv() {
   const questionDiv = document.createElement("div");
   questionDiv.classList.add("question_div");
 
+  const questionIndex = document.querySelectorAll(".question_div").length;
+
   questionDiv.innerHTML = `
-      <div class="remove_question_div">X</div>
-      <div class="question_title">
-          <label for="question">Question:</label>
-          <textarea name="question" id="question" class="question_textarea" required></textarea>
-      </div>
-      <div class="question_points">
-          <input type="number" name="question_points" class="question_points_input" placeholder="Pts." required>
-      </div>
-      <div class="question_type">
-          <select name="question_type" class="question_type_select" required>
-              <option value="1">Multiple Choice</option>
-              <option value="2">Identification</option>
-          </select>
-      </div>
-      <div class="answer_field"></div>
-      <div class="add_option_div">
-        <p>Add Another Option +</p>
-      </div>
-    `;
+            <div class="remove_question_div">X</div>
+            <div class="question_title">
+                <label for="question_${questionIndex}">Question:</label>
+                <textarea name="question_${questionIndex}_title" id="question_${questionIndex}" class="question_textarea" required></textarea>
+            </div>
+            <div class="question_points">
+                <input type="number" name="question_${questionIndex}_points" class="question_points_input" placeholder="Pts." required>
+            </div>
+            <div class="question_type">
+                <select name="question_${questionIndex}_type" class="question_type_select" required>
+                    <option value="1">Multiple Choice</option>
+                    <option value="2">Identification</option>
+                </select>
+            </div>
+            <div class="answer_field"></div>
+            <div class="add_option_div">
+                <p>Add Another Option +</p>
+            </div>
+        `;
 
   const removeQuestionButton = questionDiv.querySelector(
     ".remove_question_div"
@@ -36,21 +37,19 @@ function createQuestionDiv() {
 
   return questionDiv;
 }
+
 function updateMultipleQuestions(questionDiv) {
   const questionDivName = questionDiv.querySelector(".question_textarea").id;
   const option_divs = questionDiv.querySelectorAll(".multiple-choice-option");
   option_divs.forEach((optionDiv, index) => {
-    const option_children = optionDiv
-      .querySelectorAll("input")
-      .forEach((input, i) => {
-        const inputLabel = optionDiv.querySelector(".option_label");
-        if (input.type === "radio") {
-          input.name = `${questionDivName}_answer`;
-        }
-        if (input.type === "text") {
-          input.name = `${questionDivName}_option_${index}`;
-        }
-      });
+    optionDiv.querySelectorAll("input").forEach((input, i) => {
+      if (input.type === "radio") {
+        input.name = `${questionDivName}_answer`;
+      }
+      if (input.type === "text") {
+        input.name = `${questionDivName}_option_${index}`;
+      }
+    });
   });
 }
 
@@ -60,14 +59,12 @@ function addOption() {
 
   const radioDiv = document.createElement("div");
   radioDiv.classList.add("multiple-choice-option");
-  radioDiv.style.display = "flex";
 
   const radioInput = document.createElement("input");
   radioInput.type = "radio";
-  radioInput.name = `options`;
-  radioInput.id = `options`;
-  radioInput.value = `options`;
-  radioInput.disabled = false;
+  radioInput.name = `${
+    questionDiv.querySelector(".question_textarea").id
+  }_answer`;
   radioInput.required = true;
 
   const inputLabel = document.createElement("input");
@@ -75,35 +72,31 @@ function addOption() {
   inputLabel.name = `option_text`;
   inputLabel.placeholder = "Answer here....";
   inputLabel.classList.add("option_label");
-  inputLabel.disabled = false;
   inputLabel.required = true;
 
   const exitButton = document.createElement("p");
   exitButton.textContent = "X";
-  exitButton.style.color = "red";
   exitButton.classList.add("exit_button");
+
   inputLabel.addEventListener("input", function () {
     radioInput.value = this.value;
   });
+
   exitButton.addEventListener("click", function () {
     if (answerField.querySelectorAll(".multiple-choice-option").length === 1) {
       alert("You must have at least one option");
       return;
     }
     radioDiv.remove();
+    updateMultipleQuestions(questionDiv);
   });
-  const option_rename = new MutationObserver((mutations) => {
-    mutations.forEach((mutation, i) => {
-      if (mutation.type === "childList") {
-        updateMultipleQuestions(questionDiv);
-      }
-    });
-  });
+
   radioDiv.appendChild(radioInput);
   radioDiv.appendChild(inputLabel);
   radioDiv.appendChild(exitButton);
   answerField.appendChild(radioDiv);
-  option_rename.observe(answerField, { childList: true });
+
+  updateMultipleQuestions(questionDiv);
 }
 
 function removeQuestion() {
@@ -113,24 +106,18 @@ function removeQuestion() {
   }
   const questionDiv = this.closest(".question_div");
   questionDiv.remove();
+  updateQuestionDivNames();
 }
 
 function updateAnswerField(questionDiv) {
-  const questionDivName = questionDiv.querySelector(".question_textarea").name;
   const questionTypeSelect = questionDiv.querySelector(".question_type_select");
   const answerField = questionDiv.querySelector(".answer_field");
-  const option_rename = new MutationObserver((mutations) => {
-    mutations.forEach((mutation, i) => {
-      if (mutation.type === "childList") {
-        updateMultipleQuestions(questionDiv);
-      }
-    });
-  });
+  const addOptionButton = questionDiv.querySelector(".add_option_div");
+
   function handleChange() {
     const selectedType = questionTypeSelect.value;
     const multQExists = questionDiv.querySelectorAll(".multiple-choice-option");
     const textQExists = questionDiv.querySelector(".identification_div");
-    const addOptionButton = questionDiv.querySelector(".add_option_div");
 
     if (selectedType === "1") {
       if (multQExists.length === 0) {
@@ -144,7 +131,6 @@ function updateAnswerField(questionDiv) {
         option.style.display = "flex";
         option.querySelectorAll("input").forEach((input) => {
           input.required = true;
-          input.classList.remove("dont-require");
           input.disabled = false;
         });
       });
@@ -153,7 +139,6 @@ function updateAnswerField(questionDiv) {
       if (!textQExists) {
         const textAreaDiv = document.createElement("div");
         textAreaDiv.classList.add("identification_div");
-        textAreaDiv.style.display = "flex";
 
         const textarea = document.createElement("textarea");
         textarea.name = "identification";
@@ -166,7 +151,7 @@ function updateAnswerField(questionDiv) {
         option.style.display = "none";
         option.querySelectorAll("input").forEach((input) => {
           input.required = false;
-          input.classList.add("dont-require");
+          input.disabled = true;
         });
       });
       addOptionButton.style.display = "none";
@@ -179,28 +164,17 @@ function updateAnswerField(questionDiv) {
 
   questionTypeSelect.addEventListener("change", handleChange);
   handleChange();
-  option_rename.observe(answerField, { childList: true });
 }
 
 function addQuestion() {
   const newQuestionDiv = createQuestionDiv();
   questionList.appendChild(newQuestionDiv);
   updateAnswerField(newQuestionDiv);
+  updateQuestionDivNames();
 }
 
-addQuestionButton.addEventListener("click", addQuestion);
-
-const initialQuestionDiv = document.querySelector(".question_div");
-const initialAddOptionButton =
-  initialQuestionDiv.querySelector(".add_option_div");
-initialAddOptionButton.addEventListener("click", addOption);
-const initialRemoveQuestionButton = initialQuestionDiv.querySelector(
-  ".remove_question_div"
-);
-initialRemoveQuestionButton.addEventListener("click", removeQuestion);
-updateAnswerField(initialQuestionDiv);
-
-function updateQuestonDivNames(questionDivs) {
+function updateQuestionDivNames() {
+  const questionDivs = document.querySelectorAll(".question_div");
   questionDivs.forEach((questionDiv, index) => {
     const questionTextarea = questionDiv.querySelector(".question_textarea");
     const questionPointsInput = questionDiv.querySelector(
@@ -209,71 +183,85 @@ function updateQuestonDivNames(questionDivs) {
     const questionTypeSelect = questionDiv.querySelector(
       ".question_type_select"
     );
+
     questionTextarea.name = `question_${index}_title`;
     questionTextarea.id = `question_${index}`;
     questionPointsInput.name = `question_${index}_points`;
     questionTypeSelect.name = `question_${index}_type`;
+
+    updateMultipleQuestions(questionDiv);
   });
 }
 
-const question_rename = new MutationObserver((mutations) => {
-  mutations.forEach((mutation, i) => {
-    if (mutation.type === "childList") {
-      const questionDivs = document.querySelectorAll(".question_div");
-      updateQuestonDivNames(questionDivs);
-    }
+addQuestionButton.addEventListener("click", addQuestion);
+
+// Initialize existing questions
+document.querySelectorAll(".question_div").forEach((questionDiv) => {
+  const addOptionButton = questionDiv.querySelector(".add_option_div");
+  addOptionButton.addEventListener("click", addOption);
+
+  const removeQuestionButton = questionDiv.querySelector(
+    ".remove_question_div"
+  );
+  removeQuestionButton.addEventListener("click", removeQuestion);
+
+  const exitButtons = questionDiv.querySelectorAll(".exit_button");
+  exitButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const optionDiv = this.closest(".multiple-choice-option");
+      const answerField = optionDiv.closest(".answer_field");
+      if (
+        answerField.querySelectorAll(".multiple-choice-option").length === 1
+      ) {
+        alert("You must have at least one option");
+        return;
+      }
+      optionDiv.remove();
+      updateMultipleQuestions(questionDiv);
+    });
   });
+
+  updateAnswerField(questionDiv);
 });
-question_rename.observe(questionList, { childList: true });
-updateQuestonDivNames(document.querySelectorAll(".question_div"));
-updateMultipleQuestions(initialQuestionDiv);
-window.addEventListener("beforeunload", function (e) {
-  if (doAlert) {
-    e.preventDefault();
-    alert("You have unsaved changes");
-  }
-});
+
+updateQuestionDivNames();
+
 document
   .getElementById("assessment_form")
   .addEventListener("submit", function (event) {
-    document.querySelectorAll(".dont-require").forEach((input) => {
-      input.disabled = true;
+    event.preventDefault();
+
+    // Disable inputs for hidden multiple-choice options
+    document.querySelectorAll(".multiple-choice-option").forEach((option) => {
+      if (option.style.display === "none") {
+        option.querySelectorAll("input").forEach((input) => {
+          input.disabled = true;
+        });
+      }
     });
 
-    event.preventDefault();
-    let data = new FormData(this);
-    for (let [key, value] of data.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-
-    // Step 1: Get the current URL
-    const currentUrl = window.location.href;
-
-    // Step 2: Create a URL object
-    const url = new URL(currentUrl);
-
-    // Step 3: Create a URLSearchParams object from the URL's search string
-    const searchParams = new URLSearchParams(url.search);
-
-    // Step 4: Get the value of a specific URL parameter, e.g., 'id'
-    const video = searchParams.get("video");
-    const timestamp = searchParams.get("timestamp");
-
-    fetch(
-      `./includes/create_assessment.php?video=${video}&timestamp=${timestamp}`,
-      {
-        method: "POST",
-        body: new FormData(this),
-      }
-    )
-      .then((response) => response.text())
+    // Submit the form
+    fetch("./includes/update_assessment.php", {
+      method: "POST",
+      body: new FormData(this),
+    })
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        doAlert = false;
-        window.location.href = `video_assessments.php?video=${video}`;
+        if (data.status === "success") {
+          alert("Assessment updated successfully!");
+
+          const currentUrl = window.location.href;
+          const url = new URL(currentUrl);
+          const searchParams = new URLSearchParams(url.search);
+          const video = searchParams.get("video");
+
+          window.location.href = `video_assessments.php?video=${video}`;
+        } else {
+          alert("Error updating assessment: " + data.message);
+        }
       })
-      .catch((err) => {
-        console.error("Error parsing JSON:", err);
-        console.error("Response was:", text);
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("An error occurred while updating the assessment.");
       });
   });

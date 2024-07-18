@@ -3,7 +3,7 @@ session_start();
 include 'includes/dbh_inc.php';
 
 // For testing: set as admin or student
-$_SESSION['isAdmin'] = true;
+$_SESSION['isAdmin'] = false;
 
 // Query to fetch video lectures
 $sql = "SELECT id, video_title, description, video_path, user_id, date_added FROM interactive_video_video ORDER BY date_added ASC";
@@ -90,7 +90,7 @@ $stmt->close();
             <?php if ($_SESSION["isAdmin"]) : ?>
               <a href="video_assessments.php?video=<?php echo $video['id']; ?>" class="btn btn-primary">Add Assessment</a>
               <a href="edit_video.php?video=<?php echo $video['id']; ?>" class="btn btn-primary">Edit Details</a>
-              <a href="delete_video.php?video=<?php echo $video['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this video?');">Delete</a>
+              <a href="./includes/delete_video.php?video=<?php echo $video['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this video?');">Delete</a>
             <?php endif; ?>
           </div>
         </div>

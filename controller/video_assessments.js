@@ -44,5 +44,11 @@ function updateTimestampButton(currentTime) {
 
   const assessmentButton = document.getElementById("assessmentButton");
   assessmentButton.textContent = `Create Assessment at ${timestamp}`;
-  assessmentButton.href = `create_assessment.html?video=<?php echo $video_id; ?>&timestamp=${currentTime}`;
+
+  const currentUrl = window.location.href;
+  const url = new URL(currentUrl);
+  const searchParams = new URLSearchParams(url.search);
+  const video = searchParams.get("video");
+
+  assessmentButton.href = `create_assessment.html?video=${video}&timestamp=${currentTime}`;
 }

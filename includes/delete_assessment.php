@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'includes/dbh_inc.php';
+include 'dbh_inc.php';
 
 // Check if user is an admin
 if (!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] !== true) {
@@ -20,7 +20,7 @@ $stmt->bind_param("i", $assessment_id);
 
 if ($stmt->execute()) {
   echo "<div class='alert alert-success'>Assessment deleted successfully.</div>";
-  header("Location: video_assessments.php?video=$video_id");
+  header("Location: ../video_assessments.php?video=$video_id");
   exit();
 } else {
   echo "<div class='alert alert-danger'>Error deleting assessment: " . $stmt->error . "</div>";
