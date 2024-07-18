@@ -3,7 +3,7 @@ session_start();
 include 'includes/dbh_inc.php';
 
 // For testing: set as admin or student
-$_SESSION['isAdmin'] = false;
+$_SESSION['isAdmin'] = true;
 
 // Query to fetch video lectures
 $sql = "SELECT id, video_title, description, video_path, user_id, date_added FROM interactive_video_video ORDER BY date_added ASC";

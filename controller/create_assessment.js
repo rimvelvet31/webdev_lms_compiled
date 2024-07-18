@@ -1,5 +1,6 @@
 const questionList = document.querySelector(".question_list");
 const addQuestionButton = document.getElementById("add_question");
+let doAlert = true;
 
 function createQuestionDiv() {
   const questionDiv = document.createElement("div");
@@ -227,8 +228,10 @@ question_rename.observe(questionList, { childList: true });
 updateQuestonDivNames(document.querySelectorAll(".question_div"));
 updateMultipleQuestions(initialQuestionDiv);
 window.addEventListener("beforeunload", function (e) {
-  e.preventDefault();
-  alert("You have unsaved changes");
+  if (doAlert) {
+    e.preventDefault();
+    alert("You have unsaved changes");
+  }
 });
 document
   .getElementById("assessment_form")
@@ -263,7 +266,8 @@ document
       .then((response) => response.text())
       .then((data) => {
         console.log(data);
-        window.location.href = "upload_video.php";
+        doAlert = false;
+        window.location.href = "video_assessments.php";
       })
       .catch((err) => {
         console.error("Error parsing JSON:", err);
