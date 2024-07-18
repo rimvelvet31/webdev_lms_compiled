@@ -20,6 +20,20 @@ if (isset($_GET['video'])) {
 } else {
   echo "<div class='alert alert-danger'>Invalid video ID.</div>";
 }
+
+// Fetch assessments associated with the video
+$stmt = $mysqli->prepare("SELECT id, _timestamp FROM interactive_video_assessment WHERE video_id = ?");
+$stmt->bind_param("i", $video_id);
+$stmt->execute();
+$stmt->bind_result($assessment_id, $timestamp);
+$assessments = [];
+while ($stmt->fetch()) {
+  $assessments[] = [
+    'id' => $assessment_id,
+    'timestamp' => $timestamp
+  ];
+}
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -43,51 +57,30 @@ if (isset($_GET['video'])) {
 
   <a href="create_assessment.html" id="assessmentButton" class="btn btn-primary">Create Assessment at...</a>
 
-  <script>
-    document.getElementById('videoPlayer').addEventListener('timeupdate', function(event) {
-      updateTimestampButton(event.target.currentTime);
-    });
+  <div class="mt-3">
 
-    document.getElementById('videoPlayer').addEventListener('click', function(event) {
-      const video = event.target;
-      const duration = video.duration;
-      const progressBar = event.target;
+    <?php if (!empty($assessments)) : ?>
+      <h2>Assessments</h2>
+    <?php endif; ?>
 
-      const rect = progressBar.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
+    <?php foreach ($assessments as $assessment) : ?>
+      <div class="card" style="width: 800">
+        <div class="card-body">
+          <h5 class="card-title">
+            Assessment at <?php echo $assessment['timestamp'] ?>
+          </h5>
+          <a href="edit_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>" class="btn btn-primary">Edit</a>
+          <a href="delete_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>" class=" btn btn-danger" onclick="return confirm('Are you sure you want to delete this assessment?');">
+            Delete
+          </a>
+        </div>
+      </div>
+    <?php endforeach; ?>
 
-      const clickPositionPercentage = clickX / rect.width;
-      const clickTime = duration * clickPositionPercentage;
+    <script src="controller/video_assessments.js"></script>
 
-      video.currentTime = clickTime;
-
-      updateTimestampButton(clickTime);
-    });
-
-    function updateTimestampButton(currentTime) {
-      currentTime = Math.floor(currentTime);
-
-      const hours = Math.floor(currentTime / 3600);
-      const minutes = Math.floor((currentTime % 3600) / 60);
-      const seconds = Math.floor(currentTime % 60);
-
-      let timestamp;
-      if (hours > 0) {
-        timestamp = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-      } else {
-        timestamp = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-      }
-
-      document.getElementById('assessmentButton').textContent = `Create Assessment at ${timestamp}`;
-
-      const assessmentButton = document.getElementById('assessmentButton');
-      assessmentButton.textContent = `Create Assessment at ${timestamp}`;
-      assessmentButton.href = `create_assessment.html?video=<?php echo $video_id; ?>&timestamp=${currentTime}`;
-    }
-  </script>
-
-  <!-- Bootstrap -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>

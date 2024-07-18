@@ -10,8 +10,11 @@ if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
+// Get video ID from the URL
+$video_id = isset($_GET['video']) ? intval($_GET['video']) : 0;
+
 // Fetch assessment details
-$assessment_id = 2; //isset($_GET['assessment_id']) ? intval($_GET['assessment_id']) : 0;
+$assessment_id = isset($_GET['assessment_id']) ? intval($_GET['assessment_id']) : 0;
 
 if ($assessment_id === 0) {
     die("Invalid assessment ID");
@@ -65,7 +68,7 @@ mysqli_close($conn);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Assessment: <?php echo htmlspecialchars($assessment['title']); ?></title>
+    <title>Edit Assessment: <?php echo htmlspecialchars($assessment['id']); ?></title>
     <link rel="stylesheet" href="styles/edit_assessment.css" />
 </head>
 
@@ -354,6 +357,7 @@ mysqli_close($conn);
                 .then(data => {
                     if (data.status === "success") {
                         alert("Assessment updated successfully!");
+                        window.location.href = "video_assessments.php?video=<?php echo $video_id ?>";
                     } else {
                         alert("Error updating assessment: " + data.message);
                     }

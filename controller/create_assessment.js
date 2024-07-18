@@ -267,7 +267,7 @@ document
       .then((data) => {
         console.log(data);
         doAlert = false;
-        window.location.href = "video_assessments.php";
+        window.location.href = `video_assessments.php?video=${video}`;
       })
       .catch((err) => {
         console.error("Error parsing JSON:", err);
