@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="styles/edit_assessment.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Assessment</title>
+  </head>
+  <body>
+    <form id="assessment_form" action="" method="post">
+      <input type="hidden" name="assessment_id" value="1" />
+      <div class="question_list" id="question_list">
+        <div class="question_div">
+          <div class="remove_question_div">X</div>
+          <div class="question_title">
+            <label for="question">Question:</label>
+            <textarea
+              name="question_0"
+              id="question"
+              class="question_textarea"
+              required
+            ></textarea>
+          </div>
+          <div class="question_points">
+            <input
+              type="number"
+              name="question_points"
+              class="question_points_input"
+              placeholder="Pts."
+              required
+            />
+          </div>
+          <div class="question_type">
+            <select name="question_type" class="question_type_select" required>
+              <option value="1">Multiple Choice</option>
+              <option value="2">Identification</option>
+            </select>
+          </div>
+          <div class="answer_field"></div>
+          <div class="add_option_div">
+            <p>Add Another Option +</p>
+          </div>
+        </div>
+      </div>
+      <button type="button" id="add_question">Add Question</button>
+      <input type="submit" value="Save Changes" />
+    </form>
+    <script src="controller/create_assessment.js"></script>
+  </body>
+</html>

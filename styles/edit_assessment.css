@@ -1,0 +1,143 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Helvetica, sans-serif, Arial;
+  background-color: #f4f4f4;
+}
+
+.question_list:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.question_div {
+  overflow: visible;
+  width: 60vw;
+  margin-inline: auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.remove_question_div {
+  position: relative;
+  left: calc(100% + 2rem);
+  top: -2rem;
+  cursor: pointer;
+  background-color: rgb(164, 11, 11);
+  border: solid 1px black;
+  color: white;
+  width: 1.5rem;
+  height: 1.5rem;
+  text-align: center;
+  padding-top: 0.2rem;
+  user-select: none;
+}
+
+.question_title {
+  margin-bottom: 2rem;
+  display: inline-block;
+}
+
+.question_title label {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.question_title textarea {
+  all: unset;
+  height: 1.5rem;
+  border-bottom: 1px solid black;
+  padding: 0;
+  width: 20rem;
+  font-size: 1rem;
+  transition: 0.5s;
+}
+
+.question_title textarea:focus {
+  padding: 0.5rem;
+  transition: 0.5s;
+}
+
+.question_type {
+  float: right;
+  padding-right: 5px;
+}
+
+.question_type select {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 10rem;
+  text-align: center;
+}
+
+.question_type select:focus {
+  outline: none;
+}
+
+.question_points {
+  float: right;
+}
+
+.question_points input {
+  padding: 0.55rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 2.5rem;
+  text-align: center;
+}
+
+.question_points input::-webkit-inner-spin-button,
+.question_points input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.identification_div {
+  display: flex;
+}
+
+.identification_div textarea {
+  all: unset;
+  border: 1px solid gray;
+  width: 45rem;
+  padding-top: 1rem;
+  padding-left: 0.5rem;
+}
+
+.multiple-choice-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.multiple-choice-option input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+.exit_button {
+  margin-left: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.add_option_div {
+  width: fit-content;
+}
+
+.add_option_div p {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  user-select: none;
+}
+
+.add_option_div:hover {
+  cursor: pointer;
+  color: blue;
+}
