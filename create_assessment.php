@@ -10,6 +10,33 @@ if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
+if ($_GET["video"] === 0) {
+    die("Video ID is required.");
+}
+
+// Save video ID and timestamp in seconds to interactive_video_assessment table
+$video_id = $_GET['video'];
+$timestamp = intval($_GET['timestamp']);
+
+// convert timestamp to hours:minutes:seconds time object
+$hours = floor($timestamp / 3600);
+$minutes = floor(($timestamp % 3600) / 60);
+$seconds = $timestamp % 60;
+
+// create a time object in HH:MM:SS format
+$timestamp_obj = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+
+// insert video ID and timestamp into interactive_video_assessment table
+$assessment_query = "INSERT INTO interactive_video_assessment (video_id, _timestamp) VALUES (?, ?)";
+$assessment_stmt = mysqli_prepare($conn, $assessment_query);
+mysqli_stmt_bind_param($assessment_stmt, "is", $video_id, $timestamp_obj);
+
+if (!mysqli_stmt_execute($assessment_stmt)) {
+    die("Execute failed: " . mysqli_stmt_error($assessment_stmt));
+}
+
+$assessment_id = mysqli_insert_id($conn);
+
 // Prepare the SQL statement for questions
 $question_query = "INSERT INTO interactive_video_question (assessment_id, question_title, question_type, question_score, correct_answer) VALUES (?, ?, ?, ?, ?)";
 $question_stmt = mysqli_prepare($conn, $question_query);
@@ -29,7 +56,7 @@ foreach ($_POST as $key => $value) {
         $index = str_replace(['question_', '_title'], '', $key);
 
         // Retrieve question details
-        $assessment_id = $_POST['assessment_id'];
+        // $assessment_id = $_POST['assessment_id'];
         $question_title = $_POST['question_' . $index . '_title'];
         $question_type = $_POST['question_' . $index . '_type'];
         $points = $_POST['question_' . $index . '_points'];

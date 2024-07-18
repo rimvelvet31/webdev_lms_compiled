@@ -243,13 +243,27 @@ document
       console.log(`${key}: ${value}`);
     }
 
-    fetch("create_assessment.php", {
+    // Step 1: Get the current URL
+    const currentUrl = window.location.href;
+
+    // Step 2: Create a URL object
+    const url = new URL(currentUrl);
+
+    // Step 3: Create a URLSearchParams object from the URL's search string
+    const searchParams = new URLSearchParams(url.search);
+
+    // Step 4: Get the value of a specific URL parameter, e.g., 'id'
+    const video = searchParams.get("video");
+    const timestamp = searchParams.get("timestamp");
+
+    fetch(`create_assessment.php?video=${video}&timestamp=${timestamp}`, {
       method: "POST",
       body: new FormData(this),
     })
       .then((response) => response.text())
       .then((data) => {
         console.log(data);
+        window.location.href = "upload_video.php";
       })
       .catch((err) => {
         console.error("Error parsing JSON:", err);

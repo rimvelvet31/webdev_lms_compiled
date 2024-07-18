@@ -240,7 +240,7 @@ function submitAssessment(event) {
   const score = userScores.reduce((acc, score) => acc + score, 0);
   const grade = ((score / totalPoints) * 100).toFixed(2);
 
-  fetch("./includes/video_model_inc.php", {
+  fetch("./includes/lecture_model_inc.php", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -369,7 +369,19 @@ function updateSummary(timestamps) {
 }
 
 function fetchTimestamps() {
-  fetch("./includes/lecture_model_inc.php")
+  // Step 1: Get the current URL
+  const currentUrl = window.location.href;
+
+  // Step 2: Create a URL object
+  const url = new URL(currentUrl);
+
+  // Step 3: Create a URLSearchParams object from the URL's search string
+  const searchParams = new URLSearchParams(url.search);
+
+  // Step 4: Get the value of a specific URL parameter, e.g., 'id'
+  const paramValue = searchParams.get("video"); // Replace 'id' with the name of the parameter you want to fetch
+
+  fetch(`./includes/lecture_model_inc.php?video=${paramValue}`)
     .then((response) => response.json())
     .then((data) => {
       refreshTimestamps(data);

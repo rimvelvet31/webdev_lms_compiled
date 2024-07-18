@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$conn = mysqli_connect('localhost', 'root', '', 'web_lms');
+$conn = mysqli_connect('localhost', 'root', '', 'webdev_lms');
 
 if (!$conn) {
     die(json_encode(["status" => "error", "message" => "Connection failed: " . mysqli_connect_error()]));
@@ -24,7 +24,7 @@ try {
     foreach ($_POST as $key => $value) {
         if (strpos($key, 'question_') === 0 && strpos($key, '_title') !== false) {
             $index = str_replace(['question_', '_title'], '', $key);
-            
+
             $question_title = mysqli_real_escape_string($conn, $_POST["question_{$index}_title"]);
             $question_type = intval($_POST["question_{$index}_type"]);
             $question_score = intval($_POST["question_{$index}_points"]);
@@ -32,7 +32,7 @@ try {
 
             $question_query = "INSERT INTO interactive_video_question (assessment_id, question_title, question_type, question_score, correct_answer) VALUES ($assessment_id, '$question_title', $question_type, $question_score, '$correct_answer')";
             mysqli_query($conn, $question_query);
-            
+
             $question_id = mysqli_insert_id($conn);
 
             if ($question_type == 1) { // Multiple choice
