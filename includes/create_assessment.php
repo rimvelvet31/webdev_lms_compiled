@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$conn = mysqli_connect('localhost', 'root', '', 'webdev_lms');
+$conn = mysqli_connect('localhost', 'root', '', 'pup_lms');
 
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());

@@ -2,7 +2,7 @@
 $dbhost = "localhost";
 $dbuser = "root";
 $dbpass = "";
-$dbname = "webdev_lms";
+$dbname = "pup_lms";
 
 $mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
 

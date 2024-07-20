@@ -2,7 +2,8 @@
 session_start();
 include 'includes/dbh_inc.php';
 
-$_SESSION['user_id'] = 12345;
+$_SESSION['user_id'] = "202010839mn0";
+$_SESSION['course_id'] = "BSCS";
 
 // Check if user is an admin
 if (!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] !== true) {
@@ -37,11 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $description = $_POST['description'];
 
         $user_id = $_SESSION['user_id']; // Assuming user ID is stored in the session
+        $course_id = $_SESSION['course_id']; // Assuming course ID is stored in the session
 
         // Prepare and bind parameters
-        $stmt = $mysqli->prepare("INSERT INTO interactive_video_video (video_title, description, video_path, user_id, date_added) 
-                                VALUES (?, ?, ?, ?, NOW())");
-        $stmt->bind_param("sssi", $video_title, $description, $uploadFile, $user_id);
+        $stmt = $mysqli->prepare("INSERT INTO interactive_video_video (video_title, description, video_path, user_id, course_id, date_added) 
+                                VALUES (?, ?, ?, ?, ?, NOW())");
+        $stmt->bind_param("sssss", $video_title, $description, $uploadFile, $user_id, $course_id);
 
         // Execute statement
         if ($stmt->execute()) {

@@ -7,14 +7,14 @@ include 'includes/dbh_inc.php';
 $_SESSION['isAdmin'] = true;
 
 // Query to fetch video lectures
-$sql = "SELECT id, video_title, description, video_path, user_id, date_added FROM interactive_video_video ORDER BY date_added ASC";
+$sql = "SELECT id, video_title, description, video_path, user_id, course_id, date_added FROM interactive_video_video ORDER BY date_added ASC";
 $stmt = $mysqli->prepare($sql);
 
 // Execute query
 $stmt->execute();
 
 // Bind result variables
-$stmt->bind_result($id, $video_title, $description, $video_path, $user_id, $date_added);
+$stmt->bind_result($id, $video_title, $description, $video_path, $user_id, $course_id, $date_added);
 
 // Fetch videos from db
 $videos = [];
@@ -25,6 +25,7 @@ while ($stmt->fetch()) {
     'description' => $description,
     'video_path' => $video_path,
     'user_id' => $user_id,
+    "course_id" => $course_id,
     'date_added' => $date_added
   ];
 }
