@@ -69,62 +69,167 @@ mysqli_close($conn);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Assessment: <?php echo htmlspecialchars($assessment['id']); ?></title>
-  <link rel="stylesheet" href="styles/edit_assessment.css" />
+  <!--<link rel="stylesheet" href="styles/edit_assessment.css" />-->
+  <link href="styles/styles.css" rel="stylesheet">
 </head>
 
 <body>
-  <form id="assessment_form" method="POST">
-    <input type="hidden" name="assessment_id" value="<?php echo $assessment_id; ?>">
+  <!-- Header section containing the navigation bars -->
+  <div id="drawer">
+    <div class="close-button">
+      <img src="assets/close.png" />
+      <div>
+        <span>PUP eMabini</span>
+      </div>
+    </div>
+    <div>
+      <a>Home</a>
+    </div>
+    <div>
+      <a>Dashboard</a>
+    </div>
+    <div>
+      <a>My Courses</a>
+    </div>
+    <div>
+      <a style="text-decoration: none; color: black;">Assessment</a>
+    </div>
+  </div>
+  <header>
+    <div class="top-bar">
+      <div class="toggle-hamburger">
+        <img src="assets/hamburger.png" alt="PUP">
+      </div>
+      <div class="logo">
+        <img src="assets/logo.png" alt="PUP">
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Dashboard</a></li>
+          <li class="toggle-nav"><a href="#">My courses</a></li>
+          <li class="toggle-nav"><a href="../PROFESSOR/index.php">Assessment</a></li>
+          <li class="more-nav-white">
+            <a id="more-white" class="more">More</a>
+            <ul class="dropdown-menu-white">
+              <li><a href="#">My Courses</a></li>
+              <li><a href="../PROFESSOR/index.php">Assessment</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <nav class="profile-nav">
+        <ul>
+          <li><a href="#"><img src="assets/bell.png" /></a></li>
+          <li><a href="#"><img src="assets/chat.png" /></a></li>
+          <li>
+            <a id="profile" href="#"><img src="assets/profile-picture.png" /></a>
+            <ul class="dropdown-menu-profile">
+              <li><a href="#">Accessibility</a></li>
+              <div class="underline"></div>
+              <li><a href="#">Profile</a></li>
+              <li><a href="#">Grades</a></li>
+              <li><a href="#">Calendar</a></li>
+              <li><a href="#">Messages</a></li>
+              <li><a href="#">Private files</a></li>
+              <li><a href="#">Reports</a></li>
+              <div class="underline"></div>
+              <li><a href="#">Preferences</a></li>
+              <div class="underline"></div>
+              <li><a href="#">Log out</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="bottom-bar">
+      <ul>
+        <li><a href="#">Course</a></li>
+        <li class="toggle-nav-red"><a href="#">Lectures</a></li>
+        <li class="toggle-nav-red"><a href="#">Activities</a></li>
+        <li class="toggle-nav-red current"><a href="index.php">Interactive Video</a></li>
+        <li class="more-nav-red">
+          <a id="more-red" class="more_red">More</a>
+          <ul class="dropdown-menu-red">
+            <li><a href="#">Lectures</a></li>
+            <li><a href="#">Activities</a></li>
+            <li><a href="index.php">Interactive Video</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </header>
 
-    <div id="question_list" class="question_list">
-      <?php foreach ($questions as $index => $question): ?>
-        <div class="question_div">
-          <div class="remove_question_div">X</div>
-          <div class="question_title">
-            <label for="question_<?php echo $index; ?>">Question:</label>
-            <textarea name="question_<?php echo $index; ?>_title" id="question_<?php echo $index; ?>"
-              class="question_textarea" required><?php echo htmlspecialchars($question['question_title']); ?></textarea>
-          </div>
-          <div class="question_points">
-            <input type="number" name="question_<?php echo $index; ?>_points" class="question_points_input"
-              placeholder="Pts." required value="<?php echo $question['question_score']; ?>">
-          </div>
-          <div class="question_type">
-            <select name="question_<?php echo $index; ?>_type" class="question_type_select" required>
-              <option value="1" <?php echo $question['question_type'] == 1 ? 'selected' : ''; ?>>Multiple Choice
-              </option>
-              <option value="2" <?php echo $question['question_type'] == 2 ? 'selected' : ''; ?>>Identification
-              </option>
-            </select>
-          </div>
-          <div class="answer_field">
-            <?php if ($question['question_type'] == 1): ?>
-              <?php foreach ($question['choices'] as $choice_index => $choice): ?>
-                <div class="multiple-choice-option">
-                  <input type="radio" name="question_<?php echo $index; ?>_answer"
-                    value="<?php echo htmlspecialchars($choice['choice_text']); ?>" <?php echo $choice['choice_text'] == $question['correct_answer'] ? 'checked' : ''; ?>>
-                  <input type="text" name="question_<?php echo $index; ?>_option_<?php echo $choice_index; ?>"
-                    class="option_label" value="<?php echo htmlspecialchars($choice['choice_text']); ?>" required>
-                  <p class="exit_button">X</p>
-                </div>
-              <?php endforeach; ?>
-            <?php else: ?>
-              <div class="identification_div">
-                <textarea name="question_<?php echo $index; ?>_identification" placeholder="Enter answer here...."
-                  required><?php echo htmlspecialchars($question['correct_answer']); ?></textarea>
+  <div class="content-body">
+    <div class="body-container w60">
+      <form id="assessment_form" method="POST">
+        <input type="hidden" name="assessment_id" value="<?php echo $assessment_id; ?>">
+
+        <div id="question_list" class="question_list">
+          <?php foreach ($questions as $index => $question): ?>
+            <div class="question_div content-block">
+              <div class="remove_question_div"></div>
+              <div class="question_title">
+                <label for="question_<?php echo $index; ?>">
+                  <h1>Question:</h1>
+                </label>
+                <div class="underline question"></div>
+                <textarea name="question_<?php echo $index; ?>_title" id="question_<?php echo $index; ?>"
+                  class="question_textarea textarea"
+                  required><?php echo htmlspecialchars($question['question_title']); ?></textarea>
               </div>
-            <?php endif; ?>
-          </div>
-          <div class="add_option_div">
-            <p>Add Another Option +</p>
+              <div class="question_points">
+                <input type="number" name="question_<?php echo $index; ?>_points"
+                  class="question_points_input  textbox half float-right" placeholder="Pts." required
+                  value="<?php echo $question['question_score']; ?>">
+              </div>
+              <div class="question_type">
+                <select name="question_<?php echo $index; ?>_type" class="question_type_select dropdown half float-left"
+                  required>
+                  <option value="1" <?php echo $question['question_type'] == 1 ? 'selected' : ''; ?>>Multiple Choice
+                  </option>
+                  <option value="2" <?php echo $question['question_type'] == 2 ? 'selected' : ''; ?>>Identification
+                  </option>
+                </select>
+              </div>
+              <div class="answer_field">
+                <?php if ($question['question_type'] == 1): ?>
+                  <?php foreach ($question['choices'] as $choice_index => $choice): ?>
+                    <div class="multiple-choice-option">
+                      <input type="radio" class="radio" name="question_<?php echo $index; ?>_answer"
+                        value="<?php echo htmlspecialchars($choice['choice_text']); ?>" <?php echo $choice['choice_text'] == $question['correct_answer'] ? 'checked' : ''; ?>>
+                      <input type="text" class="textbox choices"
+                        name="question_<?php echo $index; ?>_option_<?php echo $choice_index; ?>" class="option_label"
+                        value="<?php echo htmlspecialchars($choice['choice_text']); ?>" required>
+                      <p class="exit_button"></p>
+                    </div>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <div class="identification_div">
+                    <textarea class="textbox no-resize" name="question_<?php echo $index; ?>_identification"
+                      placeholder="Enter answer here...."
+                      required><?php echo htmlspecialchars($question['correct_answer']); ?></textarea>
+                  </div>
+                <?php endif; ?>
+              </div>
+              <div class="add_option_div">
+                <p>Add Another Option +</p>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+        <div class="two-button-group">
+          <button class="button-type-1 font-16" onclick="backButton()" type="button" id="back">Back</button>
+          <div class="button-bundle with-margin">
+            <button class="button-type-1 font-16" type="button" id="add_question">Add Question</button>
+            <input class="button-type-1 font-16" type="submit" value="Save Changes" />
           </div>
         </div>
-      <?php endforeach; ?>
+        <!--<button type="button" id="add_question">Add Question</button>
+        <button type="submit">Save Changes</button>-->
+      </form>
     </div>
-
-    <button type="button" id="add_question">Add Question</button>
-    <button type="submit">Save Changes</button>
-  </form>
+  </div>
 
   <script src="controller/edit_assessment.js"></script>
 </body>

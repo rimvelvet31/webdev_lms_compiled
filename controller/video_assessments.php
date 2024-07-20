@@ -1,34 +1,38 @@
 <?php
+session_start();
 include 'includes/dbh_inc.php';
 
-// Ensure a video parameter is provided
-if (!isset($_GET['video'])) {
-  die('No video specified.');
+// Check if user is an admin
+if (!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] !== true) {
+  header("Location: index.php");
+  exit();
 }
 
-// Get the video ID from the query parameter and sanitize it
-$video_id = $_GET['video'];
+// Fetch video information
+if (isset($_GET['video'])) {
+  $video_id = $_GET['video'];
+  $stmt = $mysqli->prepare("SELECT id, video_title, video_path FROM interactive_video_video WHERE id = ?");
+  $stmt->bind_param("i", $video_id);
+  $stmt->execute();
+  $stmt->bind_result($video_id, $video_title, $video_path);
+  $stmt->fetch();
+  $stmt->close();
+} else {
+  echo "<div class='alert alert-danger'>Invalid video ID.</div>";
+}
 
-// Query to fetch video details based on video_ID
-$sql = "SELECT * FROM interactive_video_video WHERE id = ?";
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param('i', $video_id);
+// Fetch assessments associated with the video
+$stmt = $mysqli->prepare("SELECT id, _timestamp FROM interactive_video_assessment WHERE video_id = ?");
+$stmt->bind_param("i", $video_id);
 $stmt->execute();
-$result = $stmt->get_result();
-
-// Check if video exists
-if ($result->num_rows == 0) {
-  die('Video not found.');
+$stmt->bind_result($assessment_id, $timestamp);
+$assessments = [];
+while ($stmt->fetch()) {
+  $assessments[] = [
+    'id' => $assessment_id,
+    'timestamp' => $timestamp
+  ];
 }
-
-// Fetch video details
-$video = $result->fetch_assoc();
-$video_title = htmlspecialchars($video['video_title']);
-$description = htmlspecialchars($video['description']);
-$video_path = htmlspecialchars($video['video_path']);
-$video_extension = pathinfo($video_path, PATHINFO_EXTENSION);
-
-// Close statement
 $stmt->close();
 ?>
 
@@ -36,21 +40,18 @@ $stmt->close();
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles/lecture.css" />
-  <!-- box icons -->
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <title><?php echo $video_title; ?></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?php echo $video_title ?></title>
 
   <!-- Bootstrap -->
   <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
+
   <link href="styles/styles.css" rel="stylesheet">
 </head>
 
-<body class="max-height no-scroll">
-  <!-- Header section containing the navigation bars -->
+<body>
   <div id="drawer">
     <div class="close-button">
       <img src="assets/close.png" />
@@ -68,7 +69,7 @@ $stmt->close();
       <a>My Courses</a>
     </div>
     <div>
-      <a style="text-decoration: none; color: black;">Assessment</a>
+      <a style="text-decoration: none; color: black;" href="../PROFESSOR/index.php">Assessment</a>
     </div>
   </div>
   <header>
@@ -123,67 +124,65 @@ $stmt->close();
         <li><a href="#">Course</a></li>
         <li class="toggle-nav-red"><a href="#">Lectures</a></li>
         <li class="toggle-nav-red"><a href="#">Activities</a></li>
-        <li class="toggle-nav-red current"><a href="index.php">Interactive Video</a></li>
+        <li class="toggle-nav-red"><a href="#">Interactive Video</a></li>
         <li class="more-nav-red">
           <a id="more-red" class="more_red">More</a>
           <ul class="dropdown-menu-red">
             <li><a href="#">Lectures</a></li>
             <li><a href="#">Activities</a></li>
-            <li><a href="index.php">Interactive Video</a></li>
+            <li><a href="#">Interactive Video</a></li>
           </ul>
         </li>
       </ul>
     </div>
   </header>
-
   <div class="content-body">
-    <div class="body-container w85 video">
-      <section class="content-block video">
-        <div class="title-with-buttons">
-          <h1><?php echo $video_title; ?></h1>
-          <div class="title-buttons">
-            <button class="button-type-1 create_assessment" onclick="location.href='index.php'">Go Back Home</button>
-          </div>
+    <div class="body-container">
+      <div class="content-block">
+        <h1><?php echo $video_title ?></h1>
+        <div class="underline"></div>
+        <div class="video-container">
+          <video id="videoPlayer" src="<?php echo $video_path ?>" controls></video>
         </div>
 
-        <div class="underline bottom-margin"></div>
+        <a class="button-type-1" href="create_assessment.html" id="assessmentButton">Create Assessment at...</a>
+      </div>
 
-        <div class="video-player">
-          <video src="<?php echo $video_path; ?>" type="video/<?php echo $video_extension; ?>" id="video"
-            class="screen">
-          </video>
+      <div>
+        <?php if (!empty($assessments)): ?>
+          <h2>Assessments</h2>
+        <?php endif; ?>
 
-          <div class="controls">
-            <button id="control-btn">
-              <i class="bx bx-play bx-md"></i>
-            </button>
-            <div id="track">
-              <input type="range" id="progress" class="progress" min="0" max="100" step="0.01" value="0" />
+        <?php foreach ($assessments as $assessment): ?>
+          <div class="card" style="width: 800">
+            <div class="card-body">
+              <h5 class="card-title">
+                Assessment at <?php echo $assessment['timestamp'] ?>
+              </h5>
+              <a href="edit_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>"
+                class="btn btn-primary">Edit</a>
+              <a href="./includes/delete_assessment.php?video=<?php echo $video_id ?>&assessment_id=<?php echo $assessment['id'] ?>"
+                class=" btn btn-danger" onclick="return confirm('Are you sure you want to delete this assessment?');">
+                Delete
+              </a>
             </div>
-            <button id="summary-btn">
-              <i class="bx bx-list-ul bx-sm"></i>
-            </button>
-            <div class="time"><span id="current-time">00:00</span> / <span id="duration">00:00</span></div>
           </div>
+        <?php endforeach; ?>
+      </div>
 
-          <div id="question-dialog" data-open="false">
-            <div class="overlay"></div>
-            <div class="content"></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="content-block assessments lecture">
-        <h1 style="font-weight: bold">Description:</h1>
-        <div class="underline bottom-margin"></div>
-        <div class="scrollable">
-          <p><?php echo $description; ?></p>
-        </div>
-      </section>
+      <a class="btn btn-primary" href="index.php">Go Back Home</a>
     </div>
   </div>
 
-  <script src="controller/lecture.js"></script>
+
+
+
+  <script src="controller/video_assessments.js"></script>
+
+  <!-- Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>

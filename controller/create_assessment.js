@@ -6,17 +6,19 @@ function createQuestionDiv() {
   const questionDiv = document.createElement("div");
 
   questionDiv.classList.add("question_div");
+  questionDiv.classList.add("content-block");
   questionDiv.innerHTML = `
-      <div class="remove_question_div">X</div>
+      <div class="remove_question_div"></div>
       <div class="question_title">
-          <label for="question">Question:</label>
-          <textarea name="question" id="question" class="question_textarea" required></textarea>
+          <label for="question"><h1>Question:</h1></label>
+          <div class="underline question"></div>
+          <textarea name="question" id="question" class="question_textarea textarea" required></textarea>
       </div>
       <div class="question_points">
-          <input type="number" name="question_points" class="question_points_input" placeholder="Pts." required>
+          <input type="number" name="question_points" class="question_points_input textbox half float-right" placeholder="Pts." required>
       </div>
       <div class="question_type">
-          <select name="question_type" class="question_type_select" required>
+          <select name="question_type" class="question_type_select dropdown half float-left" required>
               <option value="1">Multiple Choice</option>
               <option value="2">Identification</option>
           </select>
@@ -42,9 +44,12 @@ function updateMultipleQuestions(questionDiv) {
     optionDiv.querySelectorAll("input").forEach((input, i) => {
       if (input.type === "radio") {
         input.name = `${questionDivName}_answer`;
+        input.classList.add("radio");
       }
       if (input.type === "text") {
         input.name = `${questionDivName}_option_${index}`;
+        input.classList.add("textbox");
+        input.classList.add("choices");
       }
     });
   });
@@ -60,6 +65,7 @@ function addOption() {
 
   const radioInput = document.createElement("input");
   radioInput.type = "radio";
+  radioInput.classList.add("radio");
   radioInput.name = `options`;
   radioInput.id = `options`;
   radioInput.value = `options`;
@@ -71,6 +77,8 @@ function addOption() {
   inputLabel.name = `option_text`;
   inputLabel.placeholder = "Answer here....";
   inputLabel.classList.add("option_label");
+  inputLabel.classList.add("textbox");
+  inputLabel.classList.add("choices");
   inputLabel.disabled = false;
   inputLabel.required = true;
   inputLabel.addEventListener("input", function () {
@@ -78,7 +86,7 @@ function addOption() {
   });
 
   const exitButton = document.createElement("p");
-  exitButton.textContent = "X";
+  //exitButton.textContent = "X";
   exitButton.style.color = "red";
   exitButton.classList.add("exit_button");
   exitButton.addEventListener("click", function () {
@@ -157,6 +165,8 @@ function updateAnswerField(questionDiv) {
 
         const textarea = document.createElement("textarea");
         textarea.name = "identification";
+        textarea.classList.add("textbox");
+        textarea.classList.add("no-resize");
         textarea.placeholder = "Enter answer here....";
         textarea.required = true;
         textAreaDiv.appendChild(textarea);
@@ -248,6 +258,7 @@ document.getElementById("assessment_form").addEventListener("submit", function (
   const url = new URL(currentUrl);
   const searchParams = new URLSearchParams(url.search);
   const video = searchParams.get("video");
+  console.log(video);
   const timestamp = searchParams.get("timestamp");
 
   fetch(`./includes/create_assessment.php?video=${video}&timestamp=${timestamp}`, {
@@ -264,4 +275,37 @@ document.getElementById("assessment_form").addEventListener("submit", function (
       console.error("Error parsing JSON:", err);
       console.error("Response was:", text);
     });
+});
+
+function backButton() {
+  const currentUrl = window.location.href;
+  const url = new URL(currentUrl);
+  const searchParams = new URLSearchParams(url.search);
+  const video = searchParams.get("video");
+  console.log(video);
+  window.location.href = `video_assessments.php?video=${video}`;
+}
+
+//navbar
+document.getElementById("more-white").addEventListener("click", function () {
+  document.getElementsByClassName("dropdown-menu-white")[0].classList.toggle("toggle-in");
+});
+
+//navbar
+document.getElementById("more-red").addEventListener("click", function () {
+  document.getElementsByClassName("dropdown-menu-red")[0].classList.toggle("toggle-in");
+});
+
+//profile
+document.getElementById("profile").addEventListener("click", function () {
+  document.getElementsByClassName("dropdown-menu-profile")[0].classList.toggle("toggle-in");
+});
+
+//drawer
+document.getElementsByClassName("toggle-hamburger")[0].addEventListener("click", function () {
+  document.getElementById("drawer").classList.toggle("enter-from-left");
+});
+
+document.getElementsByClassName("close-button")[0].addEventListener("click", function () {
+  document.getElementById("drawer").classList.toggle("enter-from-left");
 });

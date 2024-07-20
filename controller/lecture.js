@@ -164,7 +164,7 @@ function openQuestionDialog(timestamp, contentHTML) {
             </p>
           </div>
           ${question.question_type === 1 && question.choices ? (/*html*/`
-            <div class="question__options">
+            <div class="question__options top-margin-20">
               ${question.choices 
                 .map((choice) => (/*html*/ `
                   <label class="question__option">
@@ -183,7 +183,7 @@ function openQuestionDialog(timestamp, contentHTML) {
             </div>
           `) : (/* html */`
             <input
-              class="question__input"
+              class="question__input textbox top-margin-20"
               type="text"
               name="question_${index}"
               placeholder="Enter your answer..."
@@ -193,12 +193,12 @@ function openQuestionDialog(timestamp, contentHTML) {
             >
           `)}
         </div>
-      `)).join("")}
+      `)).join('<div class="underline top-bottom-margin"></div>')}
       <div class="buttons">
         ${currentTimestamp.submitted ? (
-          /*html*/`<button type="button" class="btn" onclick="closeQuestionDialog(false)">Close</button>`
+          /*html*/`<button type="button" class="button-type-1" onclick="closeQuestionDialog(false)">Close</button>`
         ) : (
-          /*html*/`<button type="submit" class="btn">Mark as done</button>`
+          /*html*/`<button type="submit" class="button-type-1 top-margin-20">Mark as done</button>`
         )}
       </div>
     </form>
@@ -336,7 +336,7 @@ function customSummaryClickListener(timestamps) {
           Total Score:
           <span class="summary__total--grade">${totalUserScore} (${totalGrade})</span></p>
         <div class="buttons">
-          <button class="btn" onclick="closeQuestionDialog(false)">Close</button>
+          <button class="button-type-1" onclick="closeQuestionDialog(false)">Close</button>
         </div>
       </div>
     `;
@@ -353,17 +353,10 @@ function updateSummary(timestamps) {
 }
 
 function fetchTimestamps() {
-  // Step 1: Get the current URL
   const currentUrl = window.location.href;
-
-  // Step 2: Create a URL object
   const url = new URL(currentUrl);
-
-  // Step 3: Create a URLSearchParams object from the URL's search string
   const searchParams = new URLSearchParams(url.search);
-
-  // Step 4: Get the value of a specific URL parameter, e.g., 'id'
-  const paramValue = searchParams.get("video"); // Replace 'id' with the name of the parameter you want to fetch
+  const paramValue = searchParams.get("video");
 
   fetch(`./includes/lecture_model_inc.php?video=${paramValue}`)
     .then((response) => response.json())
@@ -391,3 +384,27 @@ video.addEventListener("ended", () => {
 video.addEventListener("click", toggleVideo);
 
 controlBtn.addEventListener("click", toggleVideo);
+
+//navbar
+document.getElementById("more-white").addEventListener("click", function () {
+  document.getElementsByClassName("dropdown-menu-white")[0].classList.toggle("toggle-in");
+});
+
+//navbar
+document.getElementById("more-red").addEventListener("click", function () {
+  document.getElementsByClassName("dropdown-menu-red")[0].classList.toggle("toggle-in");
+});
+
+//profile
+document.getElementById("profile").addEventListener("click", function () {
+  document.getElementsByClassName("dropdown-menu-profile")[0].classList.toggle("toggle-in");
+});
+
+//drawer
+document.getElementsByClassName("toggle-hamburger")[0].addEventListener("click", function () {
+  document.getElementById("drawer").classList.toggle("enter-from-left");
+});
+
+document.getElementsByClassName("close-button")[0].addEventListener("click", function () {
+  document.getElementById("drawer").classList.toggle("enter-from-left");
+});
